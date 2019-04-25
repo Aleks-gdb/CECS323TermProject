@@ -23,13 +23,20 @@ public class Software{
                 int choice = scan.nextInt();
                 choose = false;
                 switch(choice){
-                    case 1: break;
-                    case 2: break;
-                    case 3: break;
-                    case 4: break;
-                    case 5: break;
-                    case 6: break;
-                    case 7: break;
+                    case 1: createSprint();
+                            break;
+                    case 2: createProject();
+                            break;
+                    case 3: addStories();
+                            break;
+                    case 4: displayDevsSprints();
+                            break;
+                    case 5: listDevs();
+                            break;
+                    case 6: membersCRUD();
+                            break;
+                    case 7: storiesCRUD();
+                            break;
                     default:System.out.println("That was not a choice!\n");
                             choose = true;
                 }
@@ -40,5 +47,54 @@ public class Software{
             }
         }
     }
+
+    //Connect to the database
+    public static void connect()
+    {
+
+    }
+
+    //Create a sprint in the database
+    public static void createSprint()
+    {
+
+    }
+
+    //Create a project in the database
+    public static void createProject()
+    {
+
+    }
+
+    //Add user stories to sprint backlog
+    public static void addStories()
+    {
+
+    }
+
+    //Display developer(s) and/or Sprint(s)
+    public static void displayDevsSprints()
+    {
+
+    }
+    
+    //List developers that are part of a Sprint
+    public static void listDevs()
+    {
+
+    }
+
+    //CRUD operations for management members and sprint team members
+    public static void membersCRUD()
+    {
+
+    }
+
+    //CRUD operations for user stories to project/product backlog
+    public static void storiesCRUD()
+    {
+
+    }
+
 
 }
