@@ -93,9 +93,7 @@ public class Software{
                 {
                         System.out.println("That project does not exist, please try again.");
                 }
-     
-     
-                
+                menu();
         }
      
         //Verifies that a project exists by project name
@@ -112,6 +110,7 @@ public class Software{
                         System.out.println("SQLState: " + e.getSQLState());
                         System.out.println("VendorError: " + e.getErrorCode());
                 }
+                menu();
                 return false;
         }
      
@@ -129,6 +128,7 @@ public class Software{
                         System.out.println("SQLState: " + e.getSQLState());
                         System.out.println("VendorError: " + e.getErrorCode());
                 }
+                menu();
                 return false;
         }
      
@@ -159,12 +159,16 @@ public class Software{
                 }
                 String sql = "INSERT into Projects(projectName, projectID, teamName) "
                 + "VALUES(?, ?, ?)";
+
+                menu();
         }
      
         //Add user stories to sprint backlog
         public static void addStories()
         {
-                String sql = "UPDATE UserStories SET sStartDate = “sStartDate” WHERE UserStoriesID = user_usID"
+                String sql = "UPDATE UserStories SET sStartDate = “sStartDate” WHERE UserStoriesID = user_usID";
+
+                menu();
         }
      
         //Display developer(s) and/or Sprint(s)
@@ -223,13 +227,14 @@ public class Software{
                 }
             }
 
-
+            menu();
         }
       
         //List developers that are part of a Sprint
         public static void listDevs()
         {
-     
+
+                menu();
         }
      
         //CRUD operations for management members and sprint team members
@@ -264,6 +269,9 @@ public class Software{
                         scan.nextLine();
                     }
                 }
+
+
+                menu();
         }
 
         //Verifies that a project exists by projectID
@@ -280,6 +288,7 @@ public class Software{
                         System.out.println("SQLState: " + e.getSQLState());
                         System.out.println("VendorError: " + e.getErrorCode());
                 }
+                menu();
                 return false;
         }
 
@@ -300,8 +309,9 @@ public class Software{
 
                 String sql = "INSERT into Employees(employeeID, firstName, lastName) VALUES (" + user_employeeID + ", " + user_firstName + ", " + user_lastName + ")";
 
-                INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES((SELECT employeeID FROM Employees WHERE employeeID = user_id), (SELECT teamName FROM ScrumTeams WHERE teamName = user_teamName), user_teamRole)
+                //INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES((SELECT employeeID FROM Employees WHERE employeeID = user_id), (SELECT teamName FROM ScrumTeams WHERE teamName = user_teamName), user_teamRole)
                 
+                menu();
         }
      
         //CRUD operations for user stories to project/product backlog
@@ -336,9 +346,9 @@ public class Software{
                         scan.nextLine();
                     }
                 }
+
+                menu();
         }
-     
-     
      }
      
      
