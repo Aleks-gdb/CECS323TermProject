@@ -38,7 +38,7 @@ public class Software{
                             	break;
                     	case 3: addStories();
                             	break;
-                    	case 4: //1displayDevsSprints();
+                    	case 4: displayDevsSprints();
                             	break;
                     	case 5: listDevs();
                             	break;
@@ -120,7 +120,6 @@ public class Software{
                 	System.out.println("SQLState: " + e.getSQLState());
                 	System.out.println("VendorError: " + e.getErrorCode());
         	}
-       	 
         	return false;
 	}
 
@@ -138,7 +137,6 @@ public class Software{
                 	System.out.println("SQLState: " + e.getSQLState());
                 	System.out.println("VendorError: " + e.getErrorCode());
         	}
-       	 
         	return false;
 	}
 
@@ -150,10 +148,10 @@ public class Software{
         	String user_projectName = scan.nextLine();
         	while(verifyProject(user_projectName))
         	{
-                	System.out.println("This project name already exists, please enter a unique name.");
+                	System.out.println("This project name already exists, please enter a unique name:");
                 	user_projectName = scan.nextLine();
         	}
-        	System.out.println("Please enter a four digit ID for this project");
+        	System.out.println("Please enter a four digit ID for this project:");
         	int user_projectID = scan.nextInt();
         	while(verifyProject(user_projectID) || String.valueOf(user_projectID).length() != 4)
         	{
@@ -231,7 +229,8 @@ public class Software{
             	int teamID = result.getInt(2);
             	System.out.format("%n%-25s%-25s", teamName, teamID);
     	}
-    	System.out.print("\n");
+		System.out.print("\n");
+		menu();
 	}
  
 	//Verifies that a team exists by teamName
@@ -248,38 +247,37 @@ public class Software{
                 	System.out.println("SQLState: " + e.getSQLState());
                 	System.out.println("VendorError: " + e.getErrorCode());
         	}
-        	menu();
         	return false;
 	}
 
 	// Add user stories to sprint backlog
 	public static void addStories() throws ParseException {
-		System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog.");
+		System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog:");
 		scan.nextLine();
 		String user_projectName = scan.nextLine();
 		while (!verifyProject(user_projectName)) {
-			System.out.println("Project does not exist. Please enter a valid project.");
+			System.out.println("Project does not exist. Please enter a valid project:");
 			user_projectName = scan.nextLine();
 		}
-		System.out.println("Please assign an ID for this user story.");
+		System.out.println("Please assign an ID for this user story:");
 		int user_usID = scan.nextInt();
 		
 		//have to verify start date for sprint backlog
 		//date cannot be null, and must be found in table
-		System.out.println("Please enter the start date for the sprint backlog.");
+		System.out.println("Please enter the start date for the sprint backlog:");
 		scan.nextLine();
 		String user_sSD = scan.nextLine();
 		Date user_sSDate = new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
 		java.sql.Date user_sStartDate = new java.sql.Date(user_sSDate.getTime());;
 		//
 		
-		System.out.println("Please enter the role of the user story");
+		System.out.println("Please enter the role of the user story:");
 		String user_role = scan.nextLine();
-		System.out.println("Please enter the goal of the user story");
+		System.out.println("Please enter the goal of the user story:");
 		String user_goal = scan.nextLine();
-		System.out.println("Please enter the benefit of the user story");
+		System.out.println("Please enter the benefit of the user story:");
 		String user_benefit = scan.nextLine();
-		System.out.println("Please enter the priority number of the user story");
+		System.out.println("Please enter the priority number of the user story:");
 		int user_priority = scan.nextInt();
 
 		String sql = "INSERT into UserStories(projectName, sStartDate, usID, role, goal, benefit, priority) "
@@ -307,8 +305,8 @@ public class Software{
 	//Display developer(s) and/or Sprint(s)
 	public static void displayDevsSprints() throws SQLException
 	{
-    	System.out.println("Please enter 1 if you would like to list the developers, "
-    	+ "2 if you would like to list the sprints");
+    	System.out.println("1. List the developers working on a sprint"
+    	+ "\n2. List the sprints");
   	 
     	int choice = scan.nextInt();
 
@@ -402,9 +400,6 @@ public class Software{
                 	scan.nextLine();
             	}
         	}
-
-
-        	menu();
 	}
 
 	//Verifies that a project exists by projectID
@@ -421,17 +416,16 @@ public class Software{
                 	System.out.println("SQLState: " + e.getSQLState());
                 	System.out.println("VendorError: " + e.getErrorCode());
         	}
-        	menu();
         	return false;
 	}
 
 	public static void createMember() throws SQLException
 	{
-        	System.out.println("Please enter the employee ID for the new employee");
+        	System.out.println("Please enter the employee ID for the new employee:");
         	int user_employeeID = scan.nextInt();
         	while(verifyEmpID(user_employeeID))
         	{
-                	System.out.println("This ID is already taken, please choose another");
+                	System.out.println("This ID is already taken, please choose another:");
                 	user_employeeID = scan.nextInt();
         	}
 
@@ -518,9 +512,11 @@ public class Software{
             
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("User Story inserted!\n");
+				System.out.println("User Story inserted!\n\n");
+				menu();
             } else {
-                System.out.println("User Story not inserted.\n");
+				System.out.println("User Story not inserted.\n\n");
+				menu();
             }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
@@ -538,7 +534,7 @@ public class Software{
             
             ResultSet results = stmnt.executeQuery("select * from UserStories where projectName = '" + uProjectName + "'");
             if (!results.isBeforeFirst()) {
-                System.out.println("No data avaliable, there are no user stories for project " + uProjectName + ".");
+                System.out.println("No data available, there are no user stories for project " + uProjectName + ".");
                 return "";
             }
             
@@ -617,10 +613,12 @@ public class Software{
 			statement.setInt(5,  usID);
 			int rowsInserted = statement.executeUpdate();
 			if (rowsInserted > 0) {
-				System.out.println("User story updated.");
+				System.out.println("User story updated.\n\n");
+				menu();
 			}
 			else {
-				System.out.println("User story not updated.");
+				System.out.println("User story not updated.\n\n");
+				menu();
 			}
     		
     	} catch(SQLException ex) {
@@ -652,10 +650,12 @@ public class Software{
 				statement = conn.prepareStatement(sql);
 				statement.setInt(1,  usID);
 				int rowsInserted = statement.executeUpdate();
-				System.out.println("User story deleted\n");
+				System.out.println("User story deleted.\n\n");
+				menu();
     		}
     		else {
-    			System.out.println("User story not deleted\n");
+				System.out.println("User story not deleted.\n\n");
+				menu();
     		}
     		
     	} catch(SQLException ex) {
