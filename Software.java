@@ -54,6 +54,7 @@ public class Software{
                         System.out.println("That was not a choice!\n");
                         scan.nextLine();
                     }
+                    scan.close();
                 }
         }
      
