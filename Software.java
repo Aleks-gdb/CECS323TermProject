@@ -321,7 +321,26 @@ public class Software{
 	//List developers that are part of a Sprint
 	public static void listDevs() throws SQLException
 	{
+		System.out.println("Listing all developers that are part of a Sprint");
+		stmnt = conn.createStatement();
+        	ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Sprints s INNER JOIN Projects p on s.projectName = p.projectName INNER JOIN ScrumTeams st on p.teamName = st.teamName INNER JOIN TeamRoles tr on st.teamName = tr.teamName INNER JOIN Employees e on tr.employeeID = e.employeeID");
+        	ResultSetMetaData rsmd = result.getMetaData();
+        	int numberCols = rsmd.getColumnCount();
+		for( int i=1; i<=numberCols; i++)
+        	{
+                	//prints column names
+                	System.out.print(rsmd.getColumnLabel(i) + "\t");
+        	}
 
+        	System.out.println("\n-------------------------------------------");
+
+        	while(result.next())
+        	{
+                	int employeeID = result.getInt(1);
+                	String employeeFN = result.getString(2);
+                	String employeeLN = result.getString(3);
+                	System.out.format("%n%-25s%-25s%-25s%", employeeID, employeeFN, employeeLN);
+        	}
         	menu();
 	}
 
