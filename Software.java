@@ -101,7 +101,7 @@ public class Software{
         	}
         	else
         	{
-                	System.out.println("That project does not exist, please try again.");
+                	System.out.println("That project does not exist, please try again.\n\n");
         	}
         	menu();
 	}
