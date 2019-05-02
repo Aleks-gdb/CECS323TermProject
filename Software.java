@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 
 
 
@@ -12,7 +13,7 @@ public class Software{
 	private static Statement stmnt = null;
 	private static PreparedStatement statement = null;
 	static Scanner scan = new Scanner(System.in);
-	public static void main(String[] args)
+	public static void main(String[] args) throws Exception
 	{
         System.out.println("Welcome to webuildsoftware.com!");
         connect();
@@ -47,7 +48,7 @@ public class Software{
                    	case 7: storiesCRUD();
 						break;
 					case 8: System.out.println("Goodbye!");
-							system.exit(0);
+							System.exit(0);
 							break;
                    	default:System.out.println("That was not a choice!1\n");
                            	choose = true;
@@ -268,7 +269,7 @@ public class Software{
 		System.out.println("Please enter the start date for the sprint backlog:");
 		scan.nextLine();
 		String user_sSD = scan.nextLine();
-		Date user_sSDate = new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
+		Date user_sSDate = (Date)new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
 		java.sql.Date user_sStartDate = new java.sql.Date(user_sSDate.getTime());;
 		//
 		
@@ -496,7 +497,7 @@ public class Software{
 		if(toDelete.equals("list"))
 		{
 			
-			displayDevs();
+			displayDevsSprints();
 			System.out.println("Please enter employee ID to delete: ");
 			scan.nextLine();
 			delete = scan.nextInt();
@@ -583,11 +584,10 @@ public class Software{
 
 	public static void createUserStory() throws Exception
 	{
-        Scanner scanner = new Scanner(System.in);
         System.out.print("\nPlease enter project name: ");
-        String projectName = scanner.nextLine();
+        String projectName = scan.nextLine();
         System.out.print("Please enter user story ID: ");
-        int usID = scanner.nextInt();
+        int usID = scan.nextInt();
 
         try {
             stmnt = conn.createStatement();
@@ -597,15 +597,15 @@ public class Software{
             	System.out.println("There already is a user story with usID: " + usID);
             	return;
             } 
-            scanner.nextLine();
+            scan.nextLine();
             System.out.print("Please enter role: ");
-            String role = scanner.nextLine();
+            String role = scan.nextLine();
             System.out.print("Please enter goal: ");
-            String goal = scanner.nextLine();
+            String goal = scan.nextLine();
             System.out.print("Please enter benefit: ");
-            String benefit = scanner.nextLine();
+            String benefit = scan.nextLine();
             System.out.print("Please enter priority: ");
-            int priority = scanner.nextInt();
+            int priority = scan.nextInt();
             
             String sql = "INSERT INTO UserStories (projectName, sStartDate, usID, role, goal, benefit, priority) VALUES (?, ?, ?, ?, ?, ?, ?)";
             statement = conn.prepareStatement(sql);
@@ -635,10 +635,9 @@ public class Software{
 	public static String readUserStory() 
 	{
         try {
-            Scanner scanner = new Scanner(System.in);
             stmnt = conn.createStatement();
             System.out.print("\nPlease enter project name: ");
-            String uProjectName = scanner.nextLine();
+            String uProjectName = scan.nextLine();
             
             ResultSet results = stmnt.executeQuery("select * from UserStories where projectName = '" + uProjectName + "'");
             if (!results.isBeforeFirst()) {
@@ -739,7 +738,6 @@ public class Software{
 
 	public static void deleteUserStory() throws Exception
 	{
-    	Scanner scanner = new Scanner(System.in);
     	String projectName = readUserStory();
     	if(projectName == "")
     		return;
@@ -754,7 +752,7 @@ public class Software{
     		}
     		
     		System.out.print("Are you sure you want to delete this user story? (Y/N): ");
-    		String choice = scanner.nextLine();
+    		String choice = scan.nextLine();
     		if(choice.equals("Y") || choice.equals("y")) {
     			String sql = "DELETE FROM UserStories WHERE usID = ?";
 				statement = conn.prepareStatement(sql);
