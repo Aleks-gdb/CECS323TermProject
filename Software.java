@@ -14,203 +14,203 @@ public class Software{
 	static Scanner scan = new Scanner(System.in);
 	public static void main(String[] args)
 	{
-        	System.out.println("Welcome to webuildsoftware.com!");
-        	connect();
+        System.out.println("Welcome to webuildsoftware.com!");
+        connect();
 	}
 
-	public static void menu() throws SQLException
+	public static void menu() throws Exception
 	{
-        	boolean choose = true;
-        	while(choose)
-        	{
-            	System.out.println("Please choose an operation:");
-            	System.out.println("1. Create a Sprint for a project\n2. Create a project\n3. Add user stories to sprint backlog" +
-            	"\n4. Display developer(s) and/or Sprint(s)\n5. List developers that are part of a Sprint\n6. CRUD operations for management members and sprint team members" +
-            	"\n7. CRUD operations for user stories to project/product backlog");
-            	//CRUD - Create Read Update Delete
-           	 
-            	int choice = scan.nextInt();
-                	choose = false;
-                	switch(choice){
-                    	case 1: createSprint();
-                            	break;
-                    	case 2: createProject();
-                            	break;
-                    	case 3: addStories();
-                            	break;
-                    	case 4: displayDevsSprints();
-                            	break;
-                    	case 5: listDevs();
-                            	break;
-                    	case 6: membersCRUD();
-                            	break;
-                    	case 7: storiesCRUD();
-                            	break;
-                    	default:System.out.println("That was not a choice!1\n");
-                            	choose = true;
-                	}
-        	}
+        boolean choose = true;
+        while(choose)
+        {
+           	System.out.println("Please choose an operation:");
+           	System.out.println("1. Create a Sprint for a project\n2. Create a project\n3. Add user stories to sprint backlog" +
+           	"\n4. Display developer(s) and/or Sprint(s)\n5. List developers that are part of a Sprint\n6. CRUD operations for management members and sprint team members" +
+           	"\n7. CRUD operations for user stories to project/product backlog\n8. Exit");
+           	//CRUD - Create Read Update Delete
+          	 
+           	int choice = scan.nextInt();
+               	choose = false;
+               	switch(choice){
+                   	case 1: createSprint();
+                           	break;
+                   	case 2: createProject();
+                           	break;
+                   	case 3: addStories();
+                           	break;
+                   	case 4: displayDevsSprints();
+                           	break;
+                   	case 5: listDevs();
+                           	break;
+                   	case 6: membersCRUD();
+                           	break;
+                   	case 7: storiesCRUD();
+						break;
+					case 8: System.out.println("Goodbye!");
+							system.exit(0);
+							break;
+                   	default:System.out.println("That was not a choice!1\n");
+                           	choose = true;
+               	}
+        }
 	}
 
 	//Connect to the database
-	public static void connect()
+	public static void connect() throws Exception
 	{
-        	try {
-                	conn = DriverManager.getConnection(dbURL, username, password);
-                	if( conn != null)
-                        	menu();
-        	} catch (SQLException e)
-        	{
-                	System.out.println("SQLException: " + e.getMessage());
-                	System.out.println("SQLState: " + e.getSQLState());
-                	System.out.println("VendorError: " + e.getErrorCode());
-        	}
+        try {
+               	conn = DriverManager.getConnection(dbURL, username, password);
+               	if( conn != null)
+                       	menu();
+        } catch (SQLException e)
+        {
+               	System.out.println("SQLException: " + e.getMessage());
+               	System.out.println("SQLState: " + e.getSQLState());
+               	System.out.println("VendorError: " + e.getErrorCode());
+        }
 	}
 
 	//Create a sprint in the database
-	public static void createSprint() throws SQLException
+	public static void createSprint() throws Exception
 	{
-        	System.out.println("Please enter the name of the project you would wish to create a sprint for: ");
-        	scan.nextLine();
-        	String user_projectName = scan.nextLine();
-        	if(verifyProject(user_projectName))
-        	{
-                	System.out.println("Please enter the start date of the sprint in yyyyMMdd format: ");
-                	String user_sStartDate = scan.nextLine();
-                	System.out.println("Please enter the name of the sprint: ");
-                	String user_sprintName = scan.nextLine();
-                	System.out.println("Please enter the end date of the sprint in yyyyMMdd format: ");
-                	String user_sEndDate = scan.nextLine() ;
-
-                	String sql = "INSERT into Sprints (meetingDate, projectName, sStartDate, sprintName, sEndDate)"
-                	+ "VALUES (NULL, ?, ?, ?, ?)";
+        System.out.println("Please enter the name of the project you would wish to create a sprint for: ");
+        scan.nextLine();
+        String user_projectName = scan.nextLine();
+        if(verifyProject(user_projectName))
+        {
+               	System.out.println("Please enter the start date of the sprint in yyyyMMdd format: ");
+              	String user_sStartDate = scan.nextLine();
+               	System.out.println("Please enter the name of the sprint: ");
+               	String user_sprintName = scan.nextLine();
+               	System.out.println("Please enter the end date of the sprint in yyyyMMdd format: ");
+               	String user_sEndDate = scan.nextLine() ;
+                String sql = "INSERT into Sprints (meetingDate, projectName, sStartDate, sprintName, sEndDate)"
+               	+ "VALUES (NULL, ?, ?, ?, ?)";
                	 
-                	try
-                	{
-                    	PreparedStatement stmnt = conn.prepareStatement(sql);
-                    	stmnt.setString(1, user_projectName);
-                    	stmnt.setString(2, user_sStartDate);
-                    	stmnt.setString(3, user_sprintName);
-                    	stmnt.setString(4, user_sEndDate);
-                    	stmnt.executeUpdate();
-                	}catch(SQLException e) {
-                    	System.out.println("SQLException: " + e.getMessage());
-                    	System.out.println("SQLState: " + e.getSQLState());
-                    	System.out.println("VendorError: " + e.getErrorCode());
-                	}
-        	}
-        	else
-        	{
-                	System.out.println("That project does not exist, please try again.\n\n");
-        	}
-        	menu();
+                try
+               	{
+                   	PreparedStatement stmnt = conn.prepareStatement(sql);
+                   	stmnt.setString(1, user_projectName);
+                   	stmnt.setString(2, user_sStartDate);
+                   	stmnt.setString(3, user_sprintName);
+                   	stmnt.setString(4, user_sEndDate);
+                   	stmnt.executeUpdate();
+              	}catch(SQLException e) {
+                   	System.out.println("SQLException: " + e.getMessage());
+                   	System.out.println("SQLState: " + e.getSQLState());
+                   	System.out.println("VendorError: " + e.getErrorCode());
+               	}
+        }
+        else
+        {
+               	System.out.println("That project does not exist, please try again.\n\n");
+        }
+        menu();
 	}
 
 	//Verifies that a project exists by project name
 	public static boolean verifyProject(String user_projectName) throws SQLException
 	{
-        	String sql = "SELECT * FROM Projects WHERE projectName ='" + user_projectName + "'";
-        	try {
-                	stmnt = conn.createStatement();
-                	ResultSet result = stmnt.executeQuery(sql);
-                	if(result.next())
-                        	return true;
-        	}catch(SQLException e) {
-                	System.out.println("SQLException: " + e.getMessage());
-                	System.out.println("SQLState: " + e.getSQLState());
-                	System.out.println("VendorError: " + e.getErrorCode());
-        	}
-        	return false;
+    	String sql = "SELECT * FROM Projects WHERE projectName ='" + user_projectName + "'";
+    	try {
+            	stmnt = conn.createStatement();
+            	ResultSet result = stmnt.executeQuery(sql);
+            	if(result.next())
+                    	return true;
+    	}catch(SQLException e) {
+            	System.out.println("SQLException: " + e.getMessage());
+            	System.out.println("SQLState: " + e.getSQLState());
+            	System.out.println("VendorError: " + e.getErrorCode());
+    	}
+    	return false;
 	}
 
 	//Verifies that a project exists by projectID
 	public static boolean verifyProject(int user_projectID) throws SQLException
 	{
-        	String sql = "SELECT * FROM Projects WHERE projectID ='" + user_projectID + "'";
-        	try {
-                	stmnt = conn.createStatement();
-                	ResultSet result = stmnt.executeQuery(sql);
-                	if(result.next())
-                        	return true;
-        	}catch(SQLException e) {
-                	System.out.println("SQLException: " + e.getMessage());
-                	System.out.println("SQLState: " + e.getSQLState());
-                	System.out.println("VendorError: " + e.getErrorCode());
-        	}
-        	return false;
-	}
-
-	//Create a project in the database
-	public static void createProject() throws SQLException
-	{
-        	System.out.println("Please enter the name of the project you wish to create: ");
-        	scan.nextLine();
-        	String user_projectName = scan.nextLine();
-        	while(verifyProject(user_projectName))
-        	{
-                	System.out.println("This project name already exists, please enter a unique name:");
-                	user_projectName = scan.nextLine();
-        	}
-        	System.out.println("Please enter a four digit ID for this project:");
-        	int user_projectID = scan.nextInt();
-        	while(verifyProject(user_projectID) || String.valueOf(user_projectID).length() != 4)
-        	{
-                	if( String.valueOf(user_projectID).length() != 4)
-                	{
-                        	System.out.println("Project ID is more or less than 4 digits, enter again: ");
-                	}
-                	if( verifyProject(user_projectID) )
-                	{
-                        	System.out.println("Project ID is not unique, enter again: ");
-                	}
-             	 
-                	user_projectID = scan.nextInt();
-        	}
-       	 
-        	System.out.println("Please enter the team name for the project, if you would like to see a list of all available teams, type list: ");
-        	scan.nextLine();
-        	String user_teamName = scan.nextLine();
-        	while(user_teamName.equals("list") || !verifyTeam(user_teamName))
-        	{
-            	if(user_teamName.equals("list"))
-            	{
-           		 listTeams();
-           		 System.out.println("Please enter the team name for the project: ");
-           		 user_teamName = scan.nextLine();
-            	}
-            	else
-            	{
-           		 System.out.println("Team does not exist");
-           		 System.out.println("Please enter the team name for the project: ");
-           		 user_teamName = scan.nextLine();
-            	}
-        	}
-       	 
-       	 
-       	 
-        	String sql = "INSERT into Projects(projectName, projectID, teamName) "
-        	+ "VALUES(?, ?, ?)";
-       	 
-        	try
-        	{
-            	PreparedStatement stmnt = conn.prepareStatement(sql);
-            	stmnt.setString(1, user_projectName);
-            	stmnt.setInt(2, user_projectID);
-            	stmnt.setString(3, user_teamName);
-            	stmnt.executeUpdate();
-        	}catch(SQLException e) {
+    	String sql = "SELECT * FROM Projects WHERE projectID ='" + user_projectID + "'";
+    	try {
+            	stmnt = conn.createStatement();
+            	ResultSet result = stmnt.executeQuery(sql);
+            	if(result.next())
+                    	return true;
+    	}catch(SQLException e) {
             	System.out.println("SQLException: " + e.getMessage());
             	System.out.println("SQLState: " + e.getSQLState());
             	System.out.println("VendorError: " + e.getErrorCode());
-        	}
+    	}
+    	return false;
+	}
 
-        	menu();
+	//Create a project in the database
+	public static void createProject() throws Exception
+	{
+        System.out.println("Please enter the name of the project you wish to create: ");
+        scan.nextLine();
+        String user_projectName = scan.nextLine();
+        while(verifyProject(user_projectName))
+        {
+               	System.out.println("This project name already exists, please enter a unique name:");
+               	user_projectName = scan.nextLine();
+        }
+        System.out.println("Please enter a four digit ID for this project:");
+        int user_projectID = scan.nextInt();
+        while(verifyProject(user_projectID) || String.valueOf(user_projectID).length() != 4)
+        {
+               	if( String.valueOf(user_projectID).length() != 4)
+               	{
+                       	System.out.println("Project ID is more or less than 4 digits, enter again: ");
+               	}
+               	if( verifyProject(user_projectID) )
+               	{
+                       	System.out.println("Project ID is not unique, enter again: ");
+               	}
+            	 
+               	user_projectID = scan.nextInt();
+        }
+       	
+        System.out.println("Please enter the team name for the project, if you would like to see a list of all available teams, type list: ");
+        scan.nextLine();
+        String user_teamName = scan.nextLine();
+        while(user_teamName.equals("list") || !verifyTeam(user_teamName))
+        {
+           	if(user_teamName.equals("list"))
+           	{
+          		 listTeams();
+          		 System.out.println("Please enter the team name for the project: ");
+          		 user_teamName = scan.nextLine();
+           	}
+           	else
+           	{
+          		 System.out.println("Team does not exist");
+          		 System.out.println("Please enter the team name for the project: ");
+          		 user_teamName = scan.nextLine();
+           	}
+        }
+       	 
+       	String sql = "INSERT into Projects(projectName, projectID, teamName) "
+        	+ "VALUES(?, ?, ?)";
+       	 
+        try
+        {
+           	PreparedStatement stmnt = conn.prepareStatement(sql);
+           	stmnt.setString(1, user_projectName);
+           	stmnt.setInt(2, user_projectID);
+           	stmnt.setString(3, user_teamName);
+           	stmnt.executeUpdate();
+        }catch(SQLException e) {
+           	System.out.println("SQLException: " + e.getMessage());
+           	System.out.println("SQLState: " + e.getSQLState());
+           	System.out.println("VendorError: " + e.getErrorCode());
+        }
+
+        menu();
 	}
     
 	//Lists all available teams
-	public static void listTeams() throws SQLException
+	public static void listTeams() throws Exception
 	{
-   	 stmnt = conn.createStatement();
+   	 	stmnt = conn.createStatement();
     	ResultSet result = stmnt.executeQuery("SELECT * FROM ScrumTeams");
     	ResultSetMetaData rsmd = result.getMetaData();
     	int numberCols = rsmd.getColumnCount();
@@ -236,22 +236,23 @@ public class Software{
 	//Verifies that a team exists by teamName
 	public static boolean verifyTeam(String user_teamName) throws SQLException
 	{
-        	String sql = "SELECT * FROM ScrumTeams WHERE teamName ='" + user_teamName + "'";
-        	try {
-                	stmnt = conn.createStatement();
-                	ResultSet result = stmnt.executeQuery(sql);
-                	if(result.next())
-                        	return true;
-        	}catch(SQLException e) {
-                	System.out.println("SQLException: " + e.getMessage());
-                	System.out.println("SQLState: " + e.getSQLState());
-                	System.out.println("VendorError: " + e.getErrorCode());
-        	}
-        	return false;
+        String sql = "SELECT * FROM ScrumTeams WHERE teamName ='" + user_teamName + "'";
+        try {
+               	stmnt = conn.createStatement();
+               	ResultSet result = stmnt.executeQuery(sql);
+               	if(result.next())
+                       	return true;
+        }catch(SQLException e) {
+               	System.out.println("SQLException: " + e.getMessage());
+               	System.out.println("SQLState: " + e.getSQLState());
+               	System.out.println("VendorError: " + e.getErrorCode());
+        }
+        return false;
 	}
 
 	// Add user stories to sprint backlog
-	public static void addStories() throws ParseException {
+	public static void addStories() throws Exception 
+	{
 		System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog:");
 		scan.nextLine();
 		String user_projectName = scan.nextLine();
@@ -303,7 +304,7 @@ public class Software{
 	}
 
 	//Display developer(s) and/or Sprint(s)
-	public static void displayDevsSprints() throws SQLException
+	public static void displayDevsSprints() throws Exception
 	{
     	System.out.println("1. List the developers working on a sprint"
     	+ "\n2. List the sprints");
@@ -362,107 +363,104 @@ public class Software{
 	}
  
 	//List developers that are part of a Sprint
-	public static void listDevs() throws SQLException
+	public static void listDevs() throws Exception
 	{
 		System.out.println("Listing all developers that are part of a Sprint");
 		stmnt = conn.createStatement();
-        	ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Sprints s INNER JOIN Projects p on s.projectName = p.projectName INNER JOIN ScrumTeams st on p.teamName = st.teamName INNER JOIN TeamRoles tr on st.teamName = tr.teamName INNER JOIN Employees e on tr.employeeID = e.employeeID");
-        	ResultSetMetaData rsmd = result.getMetaData();
-        	int numberCols = rsmd.getColumnCount();
+        ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Sprints s INNER JOIN Projects p on s.projectName = p.projectName INNER JOIN ScrumTeams st on p.teamName = st.teamName INNER JOIN TeamRoles tr on st.teamName = tr.teamName INNER JOIN Employees e on tr.employeeID = e.employeeID");
+        ResultSetMetaData rsmd = result.getMetaData();
+        int numberCols = rsmd.getColumnCount();
 		for( int i=1; i<=numberCols; i++)
-        	{
-                	//prints column names
-                	System.out.print(rsmd.getColumnLabel(i) + "\t");
-        	}
+        {
+               	//prints column names
+               	System.out.print(rsmd.getColumnLabel(i) + "\t");
+        }
+        System.out.println("\n-------------------------------------------");
 
-        	System.out.println("\n-------------------------------------------");
-
-        	while(result.next())
-        	{
-                	int employeeID = result.getInt(1);
-                	String employeeFN = result.getString(2);
-                	String employeeLN = result.getString(3);
-                	System.out.format("%n%-25s%-25s%-25s%", employeeID, employeeFN, employeeLN);
-        	}
-        	menu();
+        while(result.next())
+        {
+               	int employeeID = result.getInt(1);
+               	String employeeFN = result.getString(2);
+               	String employeeLN = result.getString(3);
+             	System.out.format("%n%-25s%-25s%-25s%", employeeID, employeeFN, employeeLN);
+        }
+        menu();
 	}
 
 	//CRUD operations for management members and sprint team members
 	public static void membersCRUD()
 	{
-        	boolean choose = true;
-        	while(choose)
-        	{
-            	System.out.println("Please choose an operation:");
-            	System.out.println("1. Create a member\n2. View all members\n3. Update a member" +
-            	"\n4 Delete a member");
-            	//CRUD - Create Read Update Delete
-            	try
-            	{
-                	int choice = scan.nextInt();
-                	choose = false;
-                	switch(choice){
-                    	case 1: createMember();
-                            	break;
-                    	case 2: readMember();
-                            	break;
-                    	case 3: updateMember();
-                            	break;
-                    	case 4: deleteMember();
-                            	break;
-                    	default:System.out.println("That was not a choice!\n");
-                            	choose = true;
-                	}
-            	} catch(Exception i)
-            	{
-                	System.out.println("That was not a choice!\n");
-                	scan.nextLine();
-            	}
-        	}
+        boolean choose = true;
+        while(choose)
+        {
+           	System.out.println("Please choose an operation:");
+           	System.out.println("1. Create a member\n2. View all members\n3. Update a member" +
+           	"\n4 Delete a member");
+           	//CRUD - Create Read Update Delete
+           	try
+           	{
+               	int choice = scan.nextInt();
+               	choose = false;
+               	switch(choice){
+                   	case 1: createMember();
+                           	break;
+                   	case 2: readMember();
+                           	break;
+                   	case 3: updateMember();
+                           	break;
+                   	case 4: deleteMember();
+                           	break;
+                   	default:System.out.println("That was not a choice!\n");
+                           	choose = true;
+               	}
+           	} catch(Exception i)
+           	{
+               	System.out.println("That was not a choice!\n");
+               	scan.nextLine();
+           	}
+        }
 	}
 
 	//Verifies that a project exists by projectID
 	public static boolean verifyEmpID(int user_employeeID)
 	{
-        	String sql = "SELECT * FROM EMPLOYEES WHERE employeeID ='" + user_employeeID + "'";
-        	try {
-                	stmnt = conn.createStatement();
-                	ResultSet result = stmnt.executeQuery(sql);
-                	if(result.next())
-                        	return true;
-        	}catch(SQLException e) {
-                	System.out.println("SQLException: " + e.getMessage());
-                	System.out.println("SQLState: " + e.getSQLState());
-                	System.out.println("VendorError: " + e.getErrorCode());
-        	}
-        	return false;
+        String sql = "SELECT * FROM EMPLOYEES WHERE employeeID ='" + user_employeeID + "'";
+        try {
+            	stmnt = conn.createStatement();
+               	ResultSet result = stmnt.executeQuery(sql);
+               	if(result.next())
+                       	return true;
+        }catch(SQLException e) {
+               	System.out.println("SQLException: " + e.getMessage());
+               	System.out.println("SQLState: " + e.getSQLState());
+               	System.out.println("VendorError: " + e.getErrorCode());
+        }
+        return false;
 	}
 
-	public static void createMember() throws SQLException
+	public static void createMember() throws Exception
 	{
-        	System.out.println("Please enter the employee ID for the new employee:");
-        	int user_employeeID = scan.nextInt();
-        	while(verifyEmpID(user_employeeID))
-        	{
-                	System.out.println("This ID is already taken, please choose another:");
-                	user_employeeID = scan.nextInt();
-        	}
+    	System.out.println("Please enter the employee ID for the new employee:");
+        int user_employeeID = scan.nextInt();
+        while(verifyEmpID(user_employeeID))
+        {
+            	System.out.println("This ID is already taken, please choose another:");
+            	user_employeeID = scan.nextInt();
+    	}
 
-        	System.out.println("Please enter the employees first name: ");
-        	String user_firstName = scan.nextLine();
-        	System.out.println("Please enter the employees last name: ");
-        	String user_lastName = scan.nextLine();
-
-        	String sql = "INSERT into Employees(employeeID, firstName, lastName) VALUES (" + user_employeeID + ", " + user_firstName + ", " + user_lastName + ")";
-
-        	//INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES((SELECT employeeID FROM Employees WHERE employeeID = user_id), (SELECT teamName FROM ScrumTeams WHERE teamName = user_teamName), user_teamRole)
+        System.out.println("Please enter the employees first name: ");
+        String user_firstName = scan.nextLine();
+        System.out.println("Please enter the employees last name: ");
+        String user_lastName = scan.nextLine();
+        String sql = "INSERT into Employees(employeeID, firstName, lastName) VALUES (" + user_employeeID + ", " + user_firstName + ", " + user_lastName + ")";
+        //INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES((SELECT employeeID FROM Employees WHERE employeeID = user_id), (SELECT teamName FROM ScrumTeams WHERE teamName = user_teamName), user_teamRole)
       	 
-        	menu();
+        menu();
 	}
 
-	public static void readMember() throws SQLException
+	public static void readMember() throws Exception
 	{
-   	 stmnt = conn.createStatement();
+   	 	stmnt = conn.createStatement();
     	ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Employees e INNER JOIN  TeamRoles t on e.employeeID = t.employeeID WHERE teamRole = 'developer'");
     	ResultSetMetaData rsmd = result.getMetaData();
     	int numberCols = rsmd.getColumnCount();
@@ -489,69 +487,68 @@ public class Software{
    	 
 	}
     
-	public static void deleteMember() throws SQLException
+	public static void deleteMember() throws Exception
 	{
-   	 System.out.println("Please enter the employee number for the employee you wish to delete, to see a list, type list: ");
-   	 scan.nextLine();
-   	 String toDelete = scan.nextLine();
-   	 int delete = 0;
-   	 if(toDelete.equals("list"))
-   	 {
-   		 
-   		 displayDevs();
-   		 System.out.println("Please enter employee ID to delete: ");
-   		 scan.nextLine();
-   		 delete = scan.nextInt();
-   	 }
-   	 else
-   	 {
-   		 delete = Integer.parseInt(toDelete);
-   	 }
-   	 
-   	 while(!verifyEmpID(delete))
-   	 {
-   		 System.out.println("This user ID does not exist, please enter another");
-   		 delete = scan.nextInt();
+		System.out.println("Please enter the employee number for the employee you wish to delete, to see a list, type list: ");
+		scan.nextLine();
+		String toDelete = scan.nextLine();
+		int delete = 0;
+		if(toDelete.equals("list"))
+		{
+			
+			displayDevs();
+			System.out.println("Please enter employee ID to delete: ");
+			scan.nextLine();
+			delete = scan.nextInt();
+		}
+		else
+		{
+			delete = Integer.parseInt(toDelete);
+		}
+		
+		while(!verifyEmpID(delete))
+		{
+			System.out.println("This user ID does not exist, please enter another");
+			delete = scan.nextInt();
 
-   	 }
-   	 if(verifyTeamRoles(delete))
-   	 {
-   		 String sql = "DELETE * FROM TeamRoles WHERE employeeID = ?";
-   		 
-   		 statement = conn.prepareStatement(sql);
-   		 statement.setInt(1, Integer.parseInt(toDelete));
-   		 statement.executeUpdate();
-   	 }
-   	 String sql = "DELETE * FROM Employees WHERE employeeID = ?";
-   	 
-   	 statement = conn.prepareStatement(sql);
-   	 statement.setInt(1, Integer.parseInt(toDelete));
-   	 statement.executeUpdate();
-   			 
-   	 
+		}
+		if(verifyTeamRoles(delete))
+		{
+			String sql = "DELETE * FROM TeamRoles WHERE employeeID = ?";
+			
+			statement = conn.prepareStatement(sql);
+			statement.setInt(1, Integer.parseInt(toDelete));
+			statement.executeUpdate();
+		}
+		String sql = "DELETE * FROM Employees WHERE employeeID = ?";
+		
+		statement = conn.prepareStatement(sql);
+		statement.setInt(1, Integer.parseInt(toDelete));
+		statement.executeUpdate();
 	}
     
   //Verifies that a project exists by projectID
 	public static boolean verifyTeamRoles(int user_employeeID) throws SQLException
 	{
-        	String sql = "SELECT * FROM TeamRoles WHERE employeeID ='" + user_employeeID + "'";
-        	try {
-                	stmnt = conn.createStatement();
-                	ResultSet result = stmnt.executeQuery(sql);
-                	if(result.next())
-                        	return true;
-        	}catch(SQLException e) {
-                	System.out.println("SQLException: " + e.getMessage());
-                	System.out.println("SQLState: " + e.getSQLState());
-                	System.out.println("VendorError: " + e.getErrorCode());
-        	}
+        String sql = "SELECT * FROM TeamRoles WHERE employeeID ='" + user_employeeID + "'";
+        try {
+            	stmnt = conn.createStatement();
+    	       	ResultSet result = stmnt.executeQuery(sql);
+            	if(result.next())
+                    	return true;
+    	}catch(SQLException e) {
+            	System.out.println("SQLException: " + e.getMessage());
+            	System.out.println("SQLState: " + e.getSQLState());
+            	System.out.println("VendorError: " + e.getErrorCode());
+    	}
        	 
-        	return false;
+    	return false;
 	}
 
 
 	//CRUD operations for user stories to project/product backlog
-    public static void storiesCRUD() throws SQLException {
+	public static void storiesCRUD() throws Exception 
+	{
         System.out.println("\nPlease choice an operation:");
         System.out.println("1. Create a user story for a product\n2. Read all user stories from a product" +
             "\n3. Update a user story from a project\n4. Delete a user story from a project" +
@@ -584,7 +581,8 @@ public class Software{
         menu();
     }
 
-    public static void createUserStory() {
+	public static void createUserStory() throws Exception
+	{
         Scanner scanner = new Scanner(System.in);
         System.out.print("\nPlease enter project name: ");
         String projectName = scanner.nextLine();
@@ -634,7 +632,8 @@ public class Software{
         }
     }
 
-    public static String readUserStory() {
+	public static String readUserStory() 
+	{
         try {
             Scanner scanner = new Scanner(System.in);
             stmnt = conn.createStatement();
@@ -688,7 +687,8 @@ public class Software{
         }
     }
 
-    public static void updateUserStory() {
+	public static void updateUserStory() throws Exception
+	{
     	String projectName = readUserStory();
     	if(projectName == "")
     		return;
@@ -737,7 +737,8 @@ public class Software{
     	}
     }
 
-    public static void deleteUserStory() {
+	public static void deleteUserStory() throws Exception
+	{
     	Scanner scanner = new Scanner(System.in);
     	String projectName = readUserStory();
     	if(projectName == "")
