@@ -441,6 +441,96 @@ public class Software{
         	menu();
 	}
 
+	public static void readMember() throws SQLException
+	{
+   	 stmnt = conn.createStatement();
+    	ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Employees e INNER JOIN  TeamRoles t on e.employeeID = t.employeeID WHERE teamRole = 'developer'");
+    	ResultSetMetaData rsmd = result.getMetaData();
+    	int numberCols = rsmd.getColumnCount();
+    	for( int i=1; i<=numberCols; i++)
+    	{
+            	//prints column names
+            	System.out.print(rsmd.getColumnLabel(i) + "\t");
+    	}
+
+    	System.out.println("\n-------------------------------------------");
+
+    	while(result.next())
+    	{
+            	int employeeID = result.getInt(1);
+            	String employeeFN = result.getString(2);
+            	String employeeLN = result.getString(3);
+            	System.out.format("%n%-25s%-25s%-25s", employeeID, employeeFN, employeeLN);
+    	}
+    	menu();
+	}
+    
+	public static void updateMember()
+	{
+   	 
+	}
+    
+	public static void deleteMember() throws SQLException
+	{
+   	 System.out.println("Please enter the employee number for the employee you wish to delete, to see a list, type list: ");
+   	 scan.nextLine();
+   	 String toDelete = scan.nextLine();
+   	 int delete = 0;
+   	 if(toDelete.equals("list"))
+   	 {
+   		 
+   		 displayDevs();
+   		 System.out.println("Please enter employee ID to delete: ");
+   		 scan.nextLine();
+   		 delete = scan.nextInt();
+   	 }
+   	 else
+   	 {
+   		 delete = Integer.parseInt(toDelete);
+   	 }
+   	 
+   	 while(!verifyEmpID(delete))
+   	 {
+   		 System.out.println("This user ID does not exist, please enter another");
+   		 delete = scan.nextInt();
+
+   	 }
+   	 if(verifyTeamRoles(delete))
+   	 {
+   		 String sql = "DELETE * FROM TeamRoles WHERE employeeID = ?";
+   		 
+   		 statement = conn.prepareStatement(sql);
+   		 statement.setInt(1, Integer.parseInt(toDelete));
+   		 statement.executeUpdate();
+   	 }
+   	 String sql = "DELETE * FROM Employees WHERE employeeID = ?";
+   	 
+   	 statement = conn.prepareStatement(sql);
+   	 statement.setInt(1, Integer.parseInt(toDelete));
+   	 statement.executeUpdate();
+   			 
+   	 
+	}
+    
+  //Verifies that a project exists by projectID
+	public static boolean verifyTeamRoles(int user_employeeID) throws SQLException
+	{
+        	String sql = "SELECT * FROM TeamRoles WHERE employeeID ='" + user_employeeID + "'";
+        	try {
+                	stmnt = conn.createStatement();
+                	ResultSet result = stmnt.executeQuery(sql);
+                	if(result.next())
+                        	return true;
+        	}catch(SQLException e) {
+                	System.out.println("SQLException: " + e.getMessage());
+                	System.out.println("SQLState: " + e.getSQLState());
+                	System.out.println("VendorError: " + e.getErrorCode());
+        	}
+       	 
+        	return false;
+	}
+
+
 	//CRUD operations for user stories to project/product backlog
     public static void storiesCRUD() throws SQLException {
         System.out.println("\nPlease choice an operation:");
