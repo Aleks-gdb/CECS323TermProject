@@ -24,7 +24,7 @@ public class Software{
         boolean choose = true;
         while(choose)
         {
-           	System.out.println("Please choose an operation:");
+           	System.out.println("\nPlease choose an operation:");
            	System.out.println("1. Create a Sprint for a project\n2. Create a project\n3. Add user stories to sprint backlog" +
            	"\n4. Display developer(s) and/or Sprint(s)\n5. List developers that are part of a Sprint\n6. CRUD operations for management members and sprint team members" +
            	"\n7. CRUD operations for user stories to project/product backlog\n8. Exit");
@@ -396,7 +396,7 @@ public class Software{
         {
            	System.out.println("Please choose an operation:");
            	System.out.println("1. Create a member\n2. View all members\n3. Update a member" +
-           	"\n4 Delete a member");
+           	"\n4. Delete a member");
            	//CRUD - Create Read Update Delete
            	try
            	{
@@ -425,7 +425,7 @@ public class Software{
 	//Verifies that a project exists by projectID
 	public static boolean verifyEmpID(int user_employeeID)
 	{
-        String sql = "SELECT * FROM EMPLOYEES WHERE employeeID ='" + user_employeeID + "'";
+        String sql = "SELECT * FROM Employees WHERE employeeID ='" + user_employeeID + "'";
         try {
             	stmnt = conn.createStatement();
                	ResultSet result = stmnt.executeQuery(sql);
@@ -440,24 +440,81 @@ public class Software{
 	}
 
 	public static void createMember() throws Exception
-	{
-    	System.out.println("Please enter the employee ID for the new employee:");
+    {
+        System.out.println("Please enter the employee ID for the new employee:");
         int user_employeeID = scan.nextInt();
         while(verifyEmpID(user_employeeID))
         {
-            	System.out.println("This ID is already taken, please choose another:");
-            	user_employeeID = scan.nextInt();
-    	}
-
+                System.out.println("This ID is already taken, please choose another:");
+                user_employeeID = scan.nextInt();
+        }
+        scan.nextLine();
         System.out.println("Please enter the employees first name: ");
         String user_firstName = scan.nextLine();
         System.out.println("Please enter the employees last name: ");
         String user_lastName = scan.nextLine();
-        String sql = "INSERT into Employees(employeeID, firstName, lastName) VALUES (" + user_employeeID + ", " + user_firstName + ", " + user_lastName + ")";
-        //INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES((SELECT employeeID FROM Employees WHERE employeeID = user_id), (SELECT teamName FROM ScrumTeams WHERE teamName = user_teamName), user_teamRole)
-      	 
+        String sql = "INSERT into Employees(employeeID, firstName, lastName) VALUES (?, ?, ?)";
+        try {
+            PreparedStatement stmnt = conn.prepareStatement(sql);
+            stmnt.setInt(1, user_employeeID);
+            stmnt.setString(2, user_firstName);
+            stmnt.setString(3, user_lastName);
+            stmnt.executeUpdate();
+            System.out.println(user_firstName + " " + user_lastName + " is now an employee!");
+        } catch (SQLException e) {
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+        }
+        boolean user_a = true;
+        while(user_a)
+        {
+            System.out.println("Enter the name of the team " + user_firstName + " " + user_lastName + " is going to join:");
+            String user_teamName = scan.nextLine();
+            while(!verifyTeam(user_teamName))
+            {
+                System.out.println("That team does not exist! Please try again: ");
+                user_teamName = scan.nextLine();
+            }
+            System.out.println("Enter the name of the role " + user_firstName + " " + user_lastName + " will perform in the team:");
+            String user_teamRole = scan.nextLine();
+            System.out.println("Confirm " + user_firstName + " " + user_lastName + " joining " + user_teamName + " as " + user_teamRole + ". (y/n)");
+            String user_answer = scan.nextLine();
+            boolean chose = true;
+            while(chose)
+            {
+                if(user_answer.charAt(0) == 'y' || user_answer.charAt(0) == 'Y')
+                {
+                    chose = false;
+                    user_a = false;
+                    String s = "INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES(?, ?, ?)";
+                    try {
+                        PreparedStatement stmnt = conn.prepareStatement(s);
+                        stmnt.setInt(1, user_employeeID);
+                        stmnt.setString(2, user_teamName);
+                        stmnt.setString(3, user_teamRole);
+                        stmnt.executeUpdate();
+                        System.out.println(user_firstName + " " + user_lastName + " is now a part of " + user_teamName + " as " + user_teamRole + "!");
+                    } catch (SQLException e) {
+                        System.out.println("SQLException: " + e.getMessage());
+                        System.out.println("SQLState: " + e.getSQLState());
+                        System.out.println("VendorError: " + e.getErrorCode());
+                    }
+                }else if(user_answer.charAt(0) == 'n' || user_answer.charAt(0) == 'N')
+                {
+                    chose = false;
+                    System.out.println("");
+                }
+                else
+                {
+                    System.out.println("Please enter y to confirm or n to try again:");
+                    user_answer = scan.nextLine();
+                }
+            }
+        }
+        System.out.println("");
         menu();
-	}
+    }
 
 	public static void readMember() throws Exception
 	{
@@ -773,15 +830,3 @@ public class Software{
     	}
     }
  }
-
-
-
-
-
-
-     
-     
-     
-     
-     
-     
