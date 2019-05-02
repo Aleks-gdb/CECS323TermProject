@@ -100,7 +100,7 @@ public class Software{
         //Verifies that a project exists by project name
         public static boolean verifyProject(String user_projectName)
         {
-                String sql = "SELECT * FROM PROJECTS WHERE projectName ='" + user_projectName + "'";
+                String sql = "SELECT * FROM Projects WHERE projectName ='" + user_projectName + "'";
                 try {
                         stmnt = conn.createStatement();
                         ResultSet result = stmnt.executeQuery(sql);
@@ -118,7 +118,7 @@ public class Software{
         //Verifies that a project exists by projectID
         public static boolean verifyProject(int user_projectID)
         {
-                String sql = "SELECT * FROM PROJECTS WHERE projectID ='" + user_projectID + "'";
+                String sql = "SELECT * FROM Projects WHERE projectID ='" + user_projectID + "'";
                 try {
                         stmnt = conn.createStatement();
                         ResultSet result = stmnt.executeQuery(sql);
