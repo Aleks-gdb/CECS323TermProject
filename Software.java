@@ -313,25 +313,7 @@ public class Software{
 
     	if(choice == 1)
     	{
-        	stmnt = conn.createStatement();
-        	ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Employees e INNER JOIN  TeamRoles t on e.employeeID = t.employeeID WHERE teamRole = 'developer'");
-        	ResultSetMetaData rsmd = result.getMetaData();
-        	int numberCols = rsmd.getColumnCount();
-        	for( int i=1; i<=numberCols; i++)
-        	{
-                	//prints column names
-                	System.out.print(rsmd.getColumnLabel(i) + "\t");
-        	}
-
-        	System.out.println("\n-------------------------------------------");
-
-        	while(result.next())
-        	{
-                	int employeeID = result.getInt(1);
-                	String employeeFN = result.getString(2);
-                	String employeeLN = result.getString(3);
-                	System.out.format("%n%-25s%-25s%-25s", employeeID, employeeFN, employeeLN);
-        	}
+        	listDevs();
     	}
 
     	if(choice == 2)
@@ -353,8 +335,8 @@ public class Software{
                 	Date meeting = result.getDate(1);
                 	String projectName = result.getString(2);
                 	Date startDate = result.getDate(3);
-                	int teamName = result.getInt(3);
-                	Date endDate = result.getDate(4);
+                	int teamName = result.getInt(4);
+                	Date endDate = result.getDate(5);
                 	System.out.format("%n%-25s%-25s%-25s%-25s%-25s", meeting, projectName, startDate, teamName, endDate);
         	}
     	}
