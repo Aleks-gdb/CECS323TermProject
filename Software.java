@@ -265,7 +265,7 @@ public class Software{
 		
 		//have to verify start date for sprint backlog
 		//date cannot be null, and must be found in table
-		System.out.println("Please enter the start date for the sprint backlog in YYYY-MM-DD format:");
+		System.out.println("Please enter the start date for the sprint backlog:");
 		scan.nextLine();
 		String user_sSD = scan.nextLine();
 		Date user_sSDate = (Date)new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
@@ -434,81 +434,88 @@ public class Software{
 	}
 
 	public static void createMember() throws Exception
-    {
-        System.out.println("Please enter the employee ID for the new employee:");
-        int user_employeeID = scan.nextInt();
-        while(verifyEmpID(user_employeeID))
-        {
-                System.out.println("This ID is already taken, please choose another:");
-                user_employeeID = scan.nextInt();
-        }
-        scan.nextLine();
-        System.out.println("Please enter the employees first name: ");
-        String user_firstName = scan.nextLine();
-        System.out.println("Please enter the employees last name: ");
-        String user_lastName = scan.nextLine();
-        String sql = "INSERT into Employees(employeeID, firstName, lastName) VALUES (?, ?, ?)";
-        try {
-            PreparedStatement stmnt = conn.prepareStatement(sql);
-            stmnt.setInt(1, user_employeeID);
-            stmnt.setString(2, user_firstName);
-            stmnt.setString(3, user_lastName);
-            stmnt.executeUpdate();
-            System.out.println(user_firstName + " " + user_lastName + " is now an employee!");
-        } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        }
-        boolean user_a = true;
-        while(user_a)
-        {
-            System.out.println("Enter the name of the team " + user_firstName + " " + user_lastName + " is going to join:");
-            String user_teamName = scan.nextLine();
-            while(!verifyTeam(user_teamName))
-            {
-                System.out.println("That team does not exist! Please try again: ");
-                user_teamName = scan.nextLine();
-            }
-            System.out.println("Enter the name of the role " + user_firstName + " " + user_lastName + " will perform in the team:");
-            String user_teamRole = scan.nextLine();
-            System.out.println("Confirm " + user_firstName + " " + user_lastName + " joining " + user_teamName + " as " + user_teamRole + ". (y/n)");
-            String user_answer = scan.nextLine();
-            boolean chose = true;
-            while(chose)
-            {
-                if(user_answer.charAt(0) == 'y' || user_answer.charAt(0) == 'Y')
-                {
-                    chose = false;
-                    user_a = false;
-                    String s = "INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES(?, ?, ?)";
-                    try {
-                        PreparedStatement stmnt = conn.prepareStatement(s);
-                        stmnt.setInt(1, user_employeeID);
-                        stmnt.setString(2, user_teamName);
-                        stmnt.setString(3, user_teamRole);
-                        stmnt.executeUpdate();
-                        System.out.println(user_firstName + " " + user_lastName + " is now a part of " + user_teamName + " as " + user_teamRole + "!");
-                    } catch (SQLException e) {
-                        System.out.println("SQLException: " + e.getMessage());
-                        System.out.println("SQLState: " + e.getSQLState());
-                        System.out.println("VendorError: " + e.getErrorCode());
-                    }
-                }else if(user_answer.charAt(0) == 'n' || user_answer.charAt(0) == 'N')
-                {
-                    chose = false;
-                    System.out.println("");
-                }
-                else
-                {
-                    System.out.println("Please enter y to confirm or n to try again:");
-                    user_answer = scan.nextLine();
-                }
-            }
-        }
-        System.out.println("");
-        menu();
-    }
+   {
+   	System.out.println("Please enter the employee ID for the new employee:");
+   	int user_employeeID = scan.nextInt();
+   	while(verifyEmpID(user_employeeID))
+   	{
+           	System.out.println("This ID is already taken, please choose another:");
+           	user_employeeID = scan.nextInt();
+   	}
+   	scan.nextLine();
+   	System.out.println("Please enter the employees first name: ");
+   	String user_firstName = scan.nextLine();
+   	System.out.println("Please enter the employees last name: ");
+   	String user_lastName = scan.nextLine();
+   	String sql = "INSERT into Employees(employeeID, firstName, lastName) VALUES (?, ?, ?)";
+   	try {
+       	PreparedStatement stmnt = conn.prepareStatement(sql);
+       	stmnt.setInt(1, user_employeeID);
+       	stmnt.setString(2, user_firstName);
+       	stmnt.setString(3, user_lastName);
+       	stmnt.executeUpdate();
+       	System.out.println(user_firstName + " " + user_lastName + " is now an employee!");
+   	} catch (SQLException e) {
+       	System.out.println("SQLException: " + e.getMessage());
+       	System.out.println("SQLState: " + e.getSQLState());
+       	System.out.println("VendorError: " + e.getErrorCode());
+   	}
+   	boolean user_a = true;
+   	while(user_a)
+   	{
+       	System.out.println("Enter the name of the team " + user_firstName + " " + user_lastName + " is going to join, or type list to list all teams:");
+       	String user_teamName = scan.nextLine();
+       	if(user_teamName.equals("list"))
+       	{
+   			listTeams();
+   			System.out.println("Enter the name of the team " + user_firstName + " " + user_lastName + " is going to join");
+   			user_teamName=scan.nextLine();
+       	}
+       	while(!verifyTeam(user_teamName))
+       	{
+           	System.out.println("That team does not exist! Please try again: ");
+           	user_teamName = scan.nextLine();
+       	}
+       	System.out.println("Enter the name of the role " + user_firstName + " " + user_lastName + " will perform in the team:");
+       	String user_teamRole = scan.nextLine();
+       	System.out.println("Confirm " + user_firstName + " " + user_lastName + " joining " + user_teamName + " as " + user_teamRole + ". (y/n)");
+       	String user_answer = scan.nextLine();
+       	boolean chose = true;
+       	while(chose)
+       	{
+           	if(user_answer.charAt(0) == 'y' || user_answer.charAt(0) == 'Y')
+           	{
+               	chose = false;
+               	user_a = false;
+               	String s = "INSERT into TeamRoles(employeeID, teamName, teamRole) VALUES(?, ?, ?)";
+               	try {
+                   	PreparedStatement stmnt = conn.prepareStatement(s);
+                   	stmnt.setInt(1, user_employeeID);
+                   	stmnt.setString(2, user_teamName);
+                   	stmnt.setString(3, user_teamRole);
+                   	stmnt.executeUpdate();
+                   	System.out.println(user_firstName + " " + user_lastName + " is now a part of " + user_teamName + " as " + user_teamRole + "!");
+               	} catch (SQLException e) {
+                   	System.out.println("SQLException: " + e.getMessage());
+                   	System.out.println("SQLState: " + e.getSQLState());
+                   	System.out.println("VendorError: " + e.getErrorCode());
+               	}
+           	}else if(user_answer.charAt(0) == 'n' || user_answer.charAt(0) == 'N')
+           	{
+               	chose = false;
+               	System.out.println("");
+           	}
+           	else
+           	{
+               	System.out.println("Please enter y to confirm or n to try again:");
+               	user_answer = scan.nextLine();
+           	}
+       	}
+   	}
+   	System.out.println("");
+   	menu();
+   }
+
 
 	public static void readMember() throws Exception
 	{
