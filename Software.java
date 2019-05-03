@@ -241,7 +241,7 @@ public class Software {
     }
 
     // Add user stories to sprint backlog
-	public static void addStories() throws Exception {
+	public static void addStories() {
 		System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog.");
 		scan.nextLine();
 		String user_projectName = scan.nextLine();
@@ -284,8 +284,9 @@ public class Software {
 		}
 		menu();
 	}
-	public static void listSprintDates() throws Exception
+	public static void listSprintDates()
 	{
+		try {
 		stmnt = conn.createStatement();
 		ResultSet result = stmnt.executeQuery("SELECT * FROM SprintBacklogs WHERE sStartDate IS NOT NULL");
 		ResultSetMetaData rsmd = result.getMetaData();
@@ -301,6 +302,12 @@ public class Software {
 			System.out.format("%n%-30s%-30s%-30s", projectName, sStartDate, sBacklogID);
 		}
 		System.out.print("\n");
+		} catch (SQLException e) {
+
+            System.out.println("SQLException: " + e.getMessage());
+            System.out.println("SQLState: " + e.getSQLState());
+            System.out.println("VendorError: " + e.getErrorCode());
+		}
 	}
     
     //Display developer(s) and/or Sprint(s)
@@ -624,8 +631,6 @@ public class Software {
                  System.out.println("Member not deleted.\n\n");
             }
             
-        }
-    
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
             System.out.println("SQLState: " + e.getSQLState());
@@ -653,14 +658,15 @@ public class Software {
     
 
 
-    //CRUD operations for user stories to project/product backlog
+  //CRUD operations for user stories to project/product backlog
     public static void storiesCRUD() {
         System.out.println("\nPlease choice an operation:");
         System.out.println("1. Create a user story for a product\n2. Read all user stories from a product" +
-            "\n3. Update a user story from a project\n4. Delete a user story from a project" +
-            "\n5. Return to main menu");
+            "\n3. Read all user stories from all products.\n4. Update a user story from a project\n5. Delete a user story from a project" +
+            "\n6. Return to main menu");
         int choice = 0;
         choice = scan.nextInt();
+        scan.nextLine();
         boolean choose = true;
         while (choose) {
             choose = false;
@@ -672,30 +678,38 @@ public class Software {
                     readUserStory();
                     break;
                 case 3:
+                	readAllUserStory();
+                	break;
+                case 4:
                     updateUserStory();
                     break;
-                case 4:
+                case 5:
                     deleteUserStory();
                     break;
-                case 5:
-                    break;
+                case 6:
+                    menu();
                 default:
                     System.out.println("That was not a choice!\n");
                     choose = false;
             }
         }
-        menu();
+        storiesCRUD();
     }
 
     public static void createUserStory() {
         System.out.print("\nPlease enter project name: ");
         String projectName = scan.nextLine();
-        System.out.print("Please enter user story ID: ");
-        int usID = scan.nextInt();
-
         try {
+        	stmnt = conn.createStatement();
+        	ResultSet results = stmnt.executeQuery("select * from Projects where projectName = '" + projectName + "'");
+        	if (!results.isBeforeFirst()) {
+        		System.out.println("Project " + projectName + " doesn't exist.");
+        		return;
+        	}
+        	System.out.print("Please enter user story ID: ");
+        	int usID = scan.nextInt();
             stmnt = conn.createStatement();
-            ResultSet results = stmnt.executeQuery("select * from UserStories where projectName = '" + projectName +
+            results = stmnt.executeQuery("select * from UserStories where projectName = '" + projectName +
                 "' and usID = " + usID);
             if (results.isBeforeFirst()) {
                 System.out.println("There already is a user story with usID: " + usID);
@@ -786,6 +800,54 @@ public class Software {
             return "";
         }
     }
+    
+    public static void readAllUserStory() {
+    	try {
+    		stmnt = conn.createStatement();
+    	 ResultSet results = stmnt.executeQuery("select * from UserStories");
+         if (!results.isBeforeFirst()) {
+             System.out.println("No data available, there are no user stories.");
+             return;
+         }
+
+         ResultSetMetaData rsmd = results.getMetaData();
+         int numberCols = rsmd.getColumnCount();
+         int displaySize = 0;
+         int totalSize = 0;
+         for (int i = 1; i <= numberCols; i++) {
+             displaySize = rsmd.getColumnDisplaySize(i) + 3;
+             totalSize = totalSize + displaySize;
+             System.out.printf("%-" + displaySize + "s", rsmd.getColumnLabel(i));
+         }
+
+         System.out.println(String.format("\n%-" + totalSize + "s", "").replace(' ', '-'));
+         while (results.next()) {
+             int projectNameSize = rsmd.getColumnDisplaySize(1) + 3;
+             int sStartDateSize = rsmd.getColumnDisplaySize(2) + 3;
+             int usIDSize = rsmd.getColumnDisplaySize(3) + 3;
+             int roleSize = rsmd.getColumnDisplaySize(4) + 3;
+             int goalSize = rsmd.getColumnDisplaySize(5) + 3;
+             int benefitSize = rsmd.getColumnDisplaySize(6) + 3;
+             int prioritySize = rsmd.getColumnDisplaySize(7) + 3;
+             String projectName = results.getString(1);
+             Date sStartDate = results.getDate(2);
+             int usID = results.getInt(3);
+             String role = results.getString(4);
+             String goal = results.getString(5);
+             String benefit = results.getString(6);
+             int priority = results.getInt(7);
+
+             	System.out.printf("%-" + projectNameSize + "s%-" + sStartDateSize + "s%-" + usIDSize +
+            		 "s%-" + roleSize + "s%-" + goalSize + "s%-" + benefitSize + "s%-" + prioritySize +
+                 	"s\n", projectName, sStartDate, usID, role, goal, benefit, priority);
+         	}
+         	System.out.println();
+    	} catch (SQLException ex) {
+         	System.out.println("SQLException: " + ex.getMessage());
+         	System.out.println("SQLState: " + ex.getSQLState());
+         	System.out.println("VendorError: " + ex.getErrorCode());
+     	}
+    }
 
     public static void updateUserStory() {
         String projectName = readUserStory();
@@ -812,13 +874,14 @@ public class Software {
             int priority = scan.nextInt();
             scan.nextLine();
 
-            String sql = "UPDATE UserStories SET role = ?, goal = ?, benefit = ?, priority = ? WHERE usID = ?";
+            String sql = "UPDATE UserStories SET role = ?, goal = ?, benefit = ?, priority = ? WHERE usID = ? and projectName = ?";
             statement = conn.prepareStatement(sql);
             statement.setString(1, role);
             statement.setString(2, goal);
             statement.setString(3, benefit);
             statement.setInt(4, priority);
             statement.setInt(5, usID);
+            statement.setString(6, projectName);
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("User story updated.\n\n");
@@ -850,9 +913,10 @@ public class Software {
             System.out.print("Are you sure you want to delete this user story? (Y/N): ");
             String choice = scan.nextLine();
             if (choice.equals("Y") || choice.equals("y")) {
-                String sql = "DELETE FROM UserStories WHERE usID = ?";
+                String sql = "DELETE FROM UserStories WHERE usID = ? and projectName = ?";
                 statement = conn.prepareStatement(sql);
                 statement.setInt(1, usID);
+                statement.setString(2, projectName);
                 int rowsInserted = statement.executeUpdate();
                 System.out.println("User story deleted.\n\n");
             } else {
