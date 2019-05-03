@@ -241,58 +241,68 @@ public class Software {
     }
 
     // Add user stories to sprint backlog
-    public static void addStories() {
-        try {
-            System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog:");
-            scan.nextLine();
-            String user_projectName = scan.nextLine();
-            while (!verifyProject(user_projectName)) {
-                System.out.println("Project does not exist. Please enter a valid project:");
-                user_projectName = scan.nextLine();
-            }
-            System.out.println("Please assign an ID for this user story:");
-            int user_usID = scan.nextInt();
+	public static void addStories() throws Exception {
+		System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog.");
+		scan.nextLine();
+		String user_projectName = scan.nextLine();
+		while (!verifyProject(user_projectName)) {
+			System.out.println("Project does not exist. Please enter a valid project.");
+			user_projectName = scan.nextLine();
+		}
+		System.out.println("Please assign an ID for this user story.");
+		int user_usID = scan.nextInt();
+		listSprintDates();
+		System.out.println("Please enter the start date for the sprint backlog in YYYY-MM-DD format.");
+		scan.nextLine();
+		String user_sStartDate = scan.nextLine();
+		System.out.println("Please enter the role of the user story");
+		String user_role = scan.nextLine();
+		System.out.println("Please enter the goal of the user story");
+		String user_goal = scan.nextLine();
+		System.out.println("Please enter the benefit of the user story");
+		String user_benefit = scan.nextLine();
+		System.out.println("Please enter the priority number of the user story");
+		int user_priority = scan.nextInt();
 
-            //have to verify start date for sprint backlog
-            //date cannot be null, and must be found in table
-            System.out.println("Please enter the start date for the sprint backlog:");
-            scan.nextLine();
-            String user_sSD = scan.nextLine();
-            Date user_sSDate = (Date) new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
-            java.sql.Date user_sStartDate = new java.sql.Date(user_sSDate.getTime());;
-            //
+		String sql = "INSERT into UserStories(projectName, sStartDate, usID, role, goal, benefit, priority) "
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
-            System.out.println("Please enter the role of the user story:");
-            String user_role = scan.nextLine();
-            System.out.println("Please enter the goal of the user story:");
-            String user_goal = scan.nextLine();
-            System.out.println("Please enter the benefit of the user story:");
-            String user_benefit = scan.nextLine();
-            System.out.println("Please enter the priority number of the user story:");
-            int user_priority = scan.nextInt();
-
-            String sql = "INSERT into UserStories(projectName, sStartDate, usID, role, goal, benefit, priority) " +
-                "VALUES(?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmnt = conn.prepareStatement(sql);
-            stmnt.setString(1, user_projectName);
-            stmnt.setDate(2, user_sStartDate);
-            stmnt.setInt(3, user_usID);
-            stmnt.setString(4, user_role);
-            stmnt.setString(5, user_goal);
-            stmnt.setString(6, user_benefit);
-            stmnt.setInt(7, user_priority);
-            stmnt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        menu();
-    }
-
+		try {
+			PreparedStatement stmnt = conn.prepareStatement(sql);
+			stmnt.setString(1, user_projectName);
+			stmnt.setString(2, user_sStartDate);
+			stmnt.setInt(3, user_usID);
+			stmnt.setString(4, user_role);
+			stmnt.setString(5, user_goal);
+			stmnt.setString(6, user_benefit);
+			stmnt.setInt(7, user_priority);
+			stmnt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("SQLException: " + e.getMessage());
+			System.out.println("SQLState: " + e.getSQLState());
+			System.out.println("VendorError: " + e.getErrorCode());
+		}
+		menu();
+	}
+	public static void listSprintDates() throws Exception
+	{
+		stmnt = conn.createStatement();
+		ResultSet result = stmnt.executeQuery("SELECT * FROM SprintBacklogs WHERE sStartDate IS NOT NULL");
+		ResultSetMetaData rsmd = result.getMetaData();
+		int numberCols = rsmd.getColumnCount();
+		for(int i = 1; i <= numberCols; i++) {
+			System.out.print(rsmd.getColumnLabel(i) + "\t");
+		}
+		System.out.println("\n--------------------------------------");
+		while(result.next()) {
+			String projectName = result.getString(1);
+			String sStartDate = result.getString(2);
+			int sBacklogID = result.getInt(3);
+			System.out.format("%n%-30s%-30s%-30s", projectName, sStartDate, sBacklogID);
+		}
+		System.out.print("\n");
+	}
+    
     //Display developer(s) and/or Sprint(s)
     public static void displayDevsSprints() {
         System.out.println("1. List the developers working on a sprint" +
