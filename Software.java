@@ -364,15 +364,13 @@ public class Software {
 
     //CRUD operations for management members and sprint team members
     public static void membersCRUD() {
-        boolean choose = true;
-        while (choose) {
+        while (true) {
             System.out.println("Please choose an operation:");
             System.out.println("1. Create a member\n2. View all members\n3. Update a member" +
-                "\n4. Delete a member");
+                "\n4. Delete a member\n5. Return to menu");
             //CRUD - Create Read Update Delete
                 int choice = scan.nextInt();
                 scan.nextLine();
-                choose = false;
                 switch (choice) {
                     case 1:
                         createMember();
@@ -386,11 +384,14 @@ public class Software {
                     case 4:
                         deleteMember();
                         break;
+                    case 5:
+                        menu();
+                        break;
                     default:
                         System.out.println("That was not a choice!\n");
-                        choose = true;
+
                 }
-                menu();
+                
         }
     }
 
@@ -437,8 +438,14 @@ public class Software {
         }
         boolean user_a = true;
         while (user_a) {
-            System.out.println("Enter the name of the team " + user_firstName + " " + user_lastName + " is going to join:");
+            System.out.println("Enter the name of the team " + user_firstName + " " + user_lastName + " is going to join or type list to see a list of teams:");
+            
             String user_teamName = scan.nextLine();
+            if(user_teamName.equals("list"))
+            {
+                listTeams();
+                System.out.println("Enter the name of the team " + user_firstName + " " + user_lastName + " is going to join: ");
+            }
             while (!verifyTeam(user_teamName)) {
                 System.out.println("That team does not exist! Please try again: ");
                 user_teamName = scan.nextLine();
