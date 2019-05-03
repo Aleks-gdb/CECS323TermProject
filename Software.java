@@ -553,7 +553,7 @@ public class Software {
         int delete = 0;
         if (toDelete.equals("list")) {
 
-            listDevs();
+            readMember();
             System.out.println("Please enter employee ID to delete: ");
             scan.nextLine();
             delete = scan.nextInt();
@@ -571,13 +571,13 @@ public class Software {
                 String sql = "DELETE * FROM TeamRoles WHERE employeeID = ?";
 
                 statement = conn.prepareStatement(sql);
-                statement.setInt(1, Integer.parseInt(toDelete));
+                statement.setInt(1, delete);
                 statement.executeUpdate();
             }
             String sql = "DELETE * FROM Employees WHERE employeeID = ?";
 
             statement = conn.prepareStatement(sql);
-            statement.setInt(1, Integer.parseInt(toDelete));
+            statement.setInt(1, delete);
             statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
