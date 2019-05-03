@@ -366,7 +366,6 @@ public class Software{
                	String employeeLN = result.getString(3);
              	System.out.format("%n%-25s%-25s%-25s", employeeID, employeeFN, employeeLN);
         }
-        menu();
 	}
 
 	//CRUD operations for management members and sprint team members
