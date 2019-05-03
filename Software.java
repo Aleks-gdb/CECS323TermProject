@@ -250,36 +250,35 @@ public class Software{
         return false;
 	}
 
-	//this still needs to be fixed
 	// Add user stories to sprint backlog
-	public static void addStories() throws Exception {
-		System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog.");
+	public static void addStories() throws Exception 
+	{
+		System.out.println("Please enter the name of the project for the user story you would like to add to the sprint backlog:");
 		scan.nextLine();
 		String user_projectName = scan.nextLine();
 		while (!verifyProject(user_projectName)) {
-			System.out.println("Project does not exist. Please enter a valid project.");
+			System.out.println("Project does not exist. Please enter a valid project:");
 			user_projectName = scan.nextLine();
 		}
-		System.out.println("Please assign an ID for this user story.");
+		System.out.println("Please assign an ID for this user story:");
 		int user_usID = scan.nextInt();
 		
-		listSprintDates();
 		//have to verify start date for sprint backlog
 		//date cannot be null, and must be found in table
-		System.out.println("Please enter the start date for the sprint backlog.");
+		System.out.println("Please enter the start date for the sprint backlog:");
 		scan.nextLine();
 		String user_sSD = scan.nextLine();
-		Date user_sSDate = new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
-		java.sql.Date user_sStartDate = new java.sql.Date(user_sSDate.getTime());
+		Date user_sSDate = (Date)new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
+		java.sql.Date user_sStartDate = new java.sql.Date(user_sSDate.getTime());;
+		//
 		
-		
-		System.out.println("Please enter the role of the user story");
+		System.out.println("Please enter the role of the user story:");
 		String user_role = scan.nextLine();
-		System.out.println("Please enter the goal of the user story");
+		System.out.println("Please enter the goal of the user story:");
 		String user_goal = scan.nextLine();
-		System.out.println("Please enter the benefit of the user story");
+		System.out.println("Please enter the benefit of the user story:");
 		String user_benefit = scan.nextLine();
-		System.out.println("Please enter the priority number of the user story");
+		System.out.println("Please enter the priority number of the user story:");
 		int user_priority = scan.nextInt();
 
 		String sql = "INSERT into UserStories(projectName, sStartDate, usID, role, goal, benefit, priority) "
@@ -303,25 +302,6 @@ public class Software{
 
 		menu();
 	}
-	public static void listSprintDates() throws Exception
-	{
-		stmnt = conn.createStatement();
-		ResultSet result = stmnt.executeQuery("SELECT * FROM SprintBacklogs WHERE sStartDate IS NOT NULL");
-		ResultSetMetaData rsmd = result.getMetaData();
-		int numberCols = rsmd.getColumnCount();
-		for(int i = 1; i <= numberCols; i++) {
-			System.out.print(rsmd.getColumnLabel(i) + "\t");
-		}
-		System.out.println("\n--------------------------------------");
-		while(result.next()) {
-			String projectName = result.getString(1);
-			Date sStartDate = result.getDate(2);
-			int sBacklogID = result.getInt(3);
-			System.out.format("%n%-25s%-25s%-25s", projectName, sStartDate, sBacklogID);
-		}
-		System.out.print("\n");
-	}
-
 
 	//Display developer(s) and/or Sprint(s)
 	public static void displayDevsSprints() throws Exception
@@ -396,7 +376,7 @@ public class Software{
         {
            	System.out.println("Please choose an operation:");
            	System.out.println("1. Create a member\n2. View all members\n3. Update a member" +
-           	"\n4. Delete a member");
+           	"\n4. Delete a member\n5. Back to menu");
            	//CRUD - Create Read Update Delete
            	try
            	{
@@ -410,7 +390,8 @@ public class Software{
                    	case 3: updateMember();
                            	break;
                    	case 4: deleteMember();
-                           	break;
+							   break;
+					case 5: menu();
                    	default:System.out.println("That was not a choice!\n");
                            	choose = true;
                	}
@@ -547,43 +528,63 @@ public class Software{
     
 	public static void deleteMember() throws Exception
 	{
-		System.out.println("Please enter the employee number for the employee you wish to delete, to see a list, type list: ");
-		scan.nextLine();
-		String toDelete = scan.nextLine();
-		int delete = 0;
-		if(toDelete.equals("list"))
-		{
-			
-			listDevs();
-			System.out.println("Please enter employee ID to delete: ");
-			scan.nextLine();
-			delete = scan.nextInt();
-		}
-		else
-		{
-			delete = Integer.parseInt(toDelete);
-		}
-		
-		while(!verifyEmpID(delete))
-		{
-			System.out.println("This user ID does not exist, please enter another");
-			delete = scan.nextInt();
+    	System.out.println("Please enter the employee number for the employee you wish to delete, to see a list, type list: ");
+    	scan.nextLine();
+    	String toDelete = scan.nextLine();
+    	int delete = 0;
+    	if(toDelete.equals("list"))
+    	{
+       	 
+   		 readMember();
+        	System.out.println("Please enter employee ID to delete: ");
+        	scan.nextLine();
+        	delete = scan.nextInt();
+    	}
+    	else
+    	{
+        	delete = Integer.parseInt(toDelete);
+    	}
+   	 
+    	while(!verifyEmpID(delete))
+    	{
+        	System.out.println("This user ID does not exist, please enter another");
+        	delete = scan.nextInt();
 
-		}
-		if(verifyTeamRoles(delete))
-		{
-			String sql = "DELETE * FROM TeamRoles WHERE employeeID = ?";
-			
-			statement = conn.prepareStatement(sql);
-			statement.setInt(1, Integer.parseInt(toDelete));
-			statement.executeUpdate();
-		}
-		String sql = "DELETE * FROM Employees WHERE employeeID = ?";
-		
-		statement = conn.prepareStatement(sql);
-		statement.setInt(1, Integer.parseInt(toDelete));
-		statement.executeUpdate();
+    	}
+    	System.out.print("Are you sure you want to delete this member? (Y/N): ");
+    	String choice = scan.nextLine();
+    	if(choice.equals("Y") || choice.equals("y")) {
+   		 if(verifyTeamRoles(delete))
+        	{
+
+            	String sql = "DELETE FROM TeamRoles WHERE employeeID = ?";
+           	 
+            	statement = conn.prepareStatement(sql);
+            	statement.setInt(1, delete);
+            	statement.executeUpdate();
+        	}
+        	if(verifyUSS(delete))
+        	{
+       		 String sql = "DELETE FROM UserStoryStatuses WHERE employeeID = ?";
+           	 
+            	statement = conn.prepareStatement(sql);
+            	statement.setInt(1, delete);
+            	statement.executeUpdate();
+        	}
+        	String sql = "DELETE FROM Employees WHERE employeeID = ?";
+       	 
+        	statement = conn.prepareStatement(sql);
+        	statement.setInt(1, delete);
+        	statement.executeUpdate();
+        	System.out.println("Member deleted.\n\n");
+    	}
+    	else {
+         	System.out.println("Member not deleted.\n\n");
+    	}
+   	 
 	}
+
+
     
   //Verifies that a project exists by projectID
 	public static boolean verifyTeamRoles(int user_employeeID) throws SQLException
