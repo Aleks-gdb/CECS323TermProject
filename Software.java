@@ -330,7 +330,7 @@ public class Software{
                 	int employeeID = result.getInt(1);
                 	String employeeFN = result.getString(2);
                 	String employeeLN = result.getString(3);
-                	System.out.format("%n%-25s%-25s%-25s%", employeeID, employeeFN, employeeLN);
+                	System.out.format("%n%-25s%-25s%-25s", employeeID, employeeFN, employeeLN);
         	}
     	}
 
@@ -355,7 +355,7 @@ public class Software{
                 	Date startDate = result.getDate(3);
                 	int teamName = result.getInt(3);
                 	Date endDate = result.getDate(4);
-                	System.out.format("%n%-25s%-25s%-25s%-25s%-25s%", meeting, projectName, startDate, teamName, endDate);
+                	System.out.format("%n%-25s%-25s%-25s%-25s%-25s", meeting, projectName, startDate, teamName, endDate);
         	}
     	}
 
@@ -382,7 +382,7 @@ public class Software{
                	int employeeID = result.getInt(1);
                	String employeeFN = result.getString(2);
                	String employeeLN = result.getString(3);
-             	System.out.format("%n%-25s%-25s%-25s%", employeeID, employeeFN, employeeLN);
+             	System.out.format("%n%-25s%-25s%-25s", employeeID, employeeFN, employeeLN);
         }
         menu();
 	}
