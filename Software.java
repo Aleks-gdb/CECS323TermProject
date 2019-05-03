@@ -265,7 +265,7 @@ public class Software{
 		
 		//have to verify start date for sprint backlog
 		//date cannot be null, and must be found in table
-		System.out.println("Please enter the start date for the sprint backlog:");
+		System.out.println("Please enter the start date for the sprint backlog in YYYY-MM-DD format:");
 		scan.nextLine();
 		String user_sSD = scan.nextLine();
 		Date user_sSDate = (Date)new SimpleDateFormat("yyyy-MM-dd").parse(user_sSD);
