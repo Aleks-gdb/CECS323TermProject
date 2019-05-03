@@ -231,7 +231,6 @@ public class Software{
             	System.out.format("%n%-25s%-25s", teamName, teamID);
     	}
 		System.out.print("\n");
-		menu();
 	}
  
 	//Verifies that a team exists by teamName
