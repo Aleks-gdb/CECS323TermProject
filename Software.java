@@ -335,7 +335,7 @@ public class Software{
                 	Date meeting = result.getDate(1);
                 	String projectName = result.getString(2);
                 	Date startDate = result.getDate(3);
-                	int teamName = result.getInt(4);
+                	String teamName = result.getString(4);
                 	Date endDate = result.getDate(5);
                 	System.out.format("%n%-25s%-25s%-25s%-25s%-25s", meeting, projectName, startDate, teamName, endDate);
         	}
