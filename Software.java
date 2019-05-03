@@ -368,6 +368,23 @@ public class Software{
         }
 	}
 
+	public static boolean verifyUSS(int user_employeeID) throws SQLException
+	{
+   	String sql = "SELECT * FROM UserStoryStatuses WHERE employeeID ='" + user_employeeID + "'";
+   	try {
+           	stmnt = conn.createStatement();
+           	ResultSet result = stmnt.executeQuery(sql);
+           	if(result.next())
+                   	return true;
+   	}catch(SQLException e) {
+           	System.out.println("SQLException: " + e.getMessage());
+           	System.out.println("SQLState: " + e.getSQLState());
+           	System.out.println("VendorError: " + e.getErrorCode());
+   	}
+  	 
+   	return false;
+	}
+
 	//CRUD operations for management members and sprint team members
 	public static void membersCRUD() throws Exception
 	{
