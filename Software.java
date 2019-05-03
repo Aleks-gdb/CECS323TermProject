@@ -306,43 +306,45 @@ public class Software{
 	//Display developer(s) and/or Sprint(s)
 	public static void displayDevsSprints() throws Exception
 	{
-    	System.out.println("1. List the developers working on a sprint"
-    	+ "\n2. List the sprints");
-  	 
-    	int choice = scan.nextInt();
+   	System.out.println("1. List the developers"
+   	+ "\n2. List the sprints");
+   
+   	int choice = scan.nextInt();
 
-    	if(choice == 1)
-    	{
-        	listDevs();
-    	}
+   	if(choice == 1)
+   	{
+       	readMember();
+   	}
 
-    	if(choice == 2)
-    	{
-        	stmnt = conn.createStatement();
-        	ResultSet result = stmnt.executeQuery("SELECT * FROM Sprints");
-        	ResultSetMetaData rsmd = result.getMetaData();
-        	int numberCols = rsmd.getColumnCount();
-        	for( int i=1; i<=numberCols; i++)
-        	{
-                	//prints column names
-                	System.out.print(rsmd.getColumnLabel(i) + "\t");
-        	}
+   	if(choice == 2)
+   	{
+       	stmnt = conn.createStatement();
+       	ResultSet result = stmnt.executeQuery("SELECT * FROM Sprints");
+       	ResultSetMetaData rsmd = result.getMetaData();
+       	int numberCols = rsmd.getColumnCount();
+       	for( int i=1; i<=numberCols; i++)
+       	{
+               	//prints column names
+               	System.out.print(rsmd.getColumnLabel(i) + "\t");
+       	}
 
-        	System.out.println("\n-------------------------------------------");
+       	System.out.println("\n-------------------------------------------");
 
-        	while(result.next())
-        	{
-                	Date meeting = result.getDate(1);
-                	String projectName = result.getString(2);
-                	Date startDate = result.getDate(3);
-                	String teamName = result.getString(4);
-                	Date endDate = result.getDate(5);
-                	System.out.format("%n%-25s%-25s%-25s%-25s%-25s", meeting, projectName, startDate, teamName, endDate);
-        	}
-    	}
+       	while(result.next())
+       	{
+               	Date meeting = result.getDate(1);
+               	String projectName = result.getString(2);
+               	Date startDate = result.getDate(3);
+               	String teamName = result.getString(4);
+               	Date endDate = result.getDate(5);
+               	System.out.format("%n%-25s%-25s%-25s%-25s%-25s", meeting, projectName, startDate, teamName, endDate);
+       	}
+   	}
 
-    	menu();
+   	menu();
 	}
+
+
  
 	//List developers that are part of a Sprint
 	public static void listDevs() throws Exception
