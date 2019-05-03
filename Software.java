@@ -369,38 +369,32 @@ public class Software{
 	}
 
 	//CRUD operations for management members and sprint team members
-	public static void membersCRUD()
+	public static void membersCRUD() throws Exception
 	{
-        boolean choose = true;
-        while(choose)
-        {
-           	System.out.println("Please choose an operation:");
-           	System.out.println("1. Create a member\n2. View all members\n3. Update a member" +
-           	"\n4. Delete a member\n5. Back to menu");
-           	//CRUD - Create Read Update Delete
-           	try
-           	{
-               	int choice = scan.nextInt();
-               	choose = false;
-               	switch(choice){
-                   	case 1: createMember();
-                           	break;
-                   	case 2: readMember();
-                           	break;
-                   	case 3: updateMember();
-                           	break;
-                   	case 4: deleteMember();
-							   break;
-					case 5: menu();
-                   	default:System.out.println("That was not a choice!\n");
-                           	choose = true;
-               	}
-           	} catch(Exception i)
-           	{
-               	System.out.println("That was not a choice!\n");
-               	scan.nextLine();
+   	while(true)
+   	{
+       	System.out.println("Please choose an operation:");
+       	System.out.println("1. Create a member\n2. View all members\n3. Update a member" +
+       	"\n4. Delete a member\n5. Back to menu");
+       	//CRUD - Create Read Update Delete
+
+           	int choice = scan.nextInt();
+         	 
+           	switch(choice){
+               	case 1: createMember();
+                       	break;
+               	case 2: readMember();
+                       	break;
+               	case 3: updateMember();
+                       	break;
+               	case 4: deleteMember();
+                       	break;
+               	case 5: menu();
+              				 break;
+               	default:System.out.println("That was not a choice!\n");
            	}
-        }
+   	}
+
 	}
 
 	//Verifies that a project exists by projectID
@@ -583,7 +577,6 @@ public class Software{
     	}
    	 
 	}
-
 
     
   //Verifies that a project exists by projectID
