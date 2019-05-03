@@ -340,7 +340,7 @@ public class Software {
         try {
             System.out.println("Listing all developers that are part of a Sprint");
             stmnt = conn.createStatement();
-            ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Sprints s INNER JOIN Projects p on s.projectName = p.projectName INNER JOIN ScrumTeams st on p.teamName = st.teamName INNER JOIN TeamRoles tr on st.teamName = tr.teamName INNER JOIN Employees e on tr.employeeID = e.employeeID");
+            ResultSet result = stmnt.executeQuery("SELECT DISTINCT e.employeeID, e.firstName, e.lastName FROM Sprints s INNER JOIN Projects p on s.projectName = p.projectName INNER JOIN ScrumTeams st on p.teamName = st.teamName INNER JOIN TeamRoles tr on st.teamName = tr.teamName INNER JOIN Employees e on tr.employeeID = e.employeeID");
             ResultSetMetaData rsmd = result.getMetaData();
             int numberCols = rsmd.getColumnCount();
             for (int i = 1; i <= numberCols; i++) {
