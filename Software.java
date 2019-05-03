@@ -534,7 +534,7 @@ public class Software{
 		if(toDelete.equals("list"))
 		{
 			
-			displayDevsSprints();
+			listDevs();
 			System.out.println("Please enter employee ID to delete: ");
 			scan.nextLine();
 			delete = scan.nextInt();
