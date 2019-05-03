@@ -487,7 +487,7 @@ public class Software {
     public static void readMember() {
         try {
             stmnt = conn.createStatement();
-            ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Employees e INNER JOIN  TeamRoles t on e.employeeID = t.employeeID WHERE teamRole = 'developer'");
+            ResultSet result = stmnt.executeQuery("SELECT e.employeeID, e.firstName, e.lastName FROM Employees");
             ResultSetMetaData rsmd = result.getMetaData();
             int numberCols = rsmd.getColumnCount();
             for (int i = 1; i <= numberCols; i++) {
