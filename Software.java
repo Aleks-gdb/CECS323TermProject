@@ -377,6 +377,7 @@ public class Software {
             System.out.println("SQLState: " + e.getSQLState());
             System.out.println("VendorError: " + e.getErrorCode());
         }
+        menu();
     }
 
     //CRUD operations for management members and sprint team members
