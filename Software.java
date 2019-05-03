@@ -332,7 +332,7 @@ public class Software {
                     System.out.print(rsmd.getColumnLabel(i) + "\t");
                 }
 
-                System.out.println("\n-------------------------------------------");
+                System.out.println("\n--------------------------------------------------------------------------");
 
                 while (result.next()) {
                     Date meeting = result.getDate(1);
@@ -340,7 +340,7 @@ public class Software {
                     Date startDate = result.getDate(3);
                     String teamName = result.getString(4);
                     Date endDate = result.getDate(5);
-                    System.out.format("%n%-25s%-25s%-25s%-25s%-25s", meeting, projectName, startDate, teamName, endDate);
+                    System.out.format("%n%-16s%-25s%-16s%-5s%-16s", meeting, projectName, startDate, teamName, endDate);
                 }
             } catch (SQLException e) {
                 System.out.println("SQLException: " + e.getMessage());
@@ -370,7 +370,7 @@ public class Software {
                 int employeeID = result.getInt(1);
                 String employeeFN = result.getString(2);
                 String employeeLN = result.getString(3);
-                System.out.format("%n%-25s%-25s%-25s", employeeID, employeeFN, employeeLN);
+                System.out.format("%n%-16s%-16s%-16s", employeeID, employeeFN, employeeLN);
             }
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
@@ -529,7 +529,7 @@ public class Software {
                 System.out.print(rsmd.getColumnLabel(i) + "\t");
             }
 
-            System.out.println("\n-------------------------------------------");
+            System.out.println("\n-------------------------------------------------------------------------------");
 
             while (result.next()) {
                 int employeeID = result.getInt(1);
@@ -537,7 +537,7 @@ public class Software {
                 String employeeLN = result.getString(3);
                 String employeeTeam = result.getString(4);
                 String employeeRole = result.getString(5);
-                System.out.format("%n%-15s%-25s%-25s%-20s%-20s", employeeID, employeeFN, employeeLN, employeeTeam, employeeRole);
+                System.out.format("%n%-16s%-16s%-16s%-20s%-16s", employeeID, employeeFN, employeeLN, employeeTeam, employeeRole);
             }
             System.out.println();
         } catch (SQLException e) {
