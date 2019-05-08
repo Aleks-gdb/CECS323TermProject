@@ -357,20 +357,22 @@ public class Software {
         try {
             System.out.println("Listing all developers that are part of a Sprint");
             stmnt = conn.createStatement();
-            ResultSet result = stmnt.executeQuery("SELECT DISTINCT e.employeeID, e.firstName, e.lastName FROM Sprints s INNER JOIN Projects p on s.projectName = p.projectName INNER JOIN ScrumTeams st on p.teamName = st.teamName INNER JOIN TeamRoles tr on st.teamName = tr.teamName INNER JOIN Employees e on tr.employeeID = e.employeeID");
+            ResultSet result = stmnt.executeQuery("SELECT DISTINCT e.employeeID, e.firstName, e.lastName, s.projectName, s.sprintName FROM Sprints s INNER JOIN Projects p on s.projectName = p.projectName INNER JOIN ScrumTeams st on p.teamName = st.teamName INNER JOIN TeamRoles tr on st.teamName = tr.teamName INNER JOIN Employees e on tr.employeeID = e.employeeID");
             ResultSetMetaData rsmd = result.getMetaData();
             int numberCols = rsmd.getColumnCount();
             for (int i = 1; i <= numberCols; i++) {
                 //prints column names
                 System.out.print(rsmd.getColumnLabel(i) + "\t");
             }
-            System.out.println("\n-------------------------------------------");
+            System.out.println("\n----------------------------------------------------------------------------");
 
             while (result.next()) {
                 int employeeID = result.getInt(1);
                 String employeeFN = result.getString(2);
                 String employeeLN = result.getString(3);
-                System.out.format("%n%-16s%-16s%-16s", employeeID, employeeFN, employeeLN);
+                String projectName = result.getString(4);
+                String sprintName = result.getString(5);
+                System.out.format("%n%-16s%-16s%-16s%-25S%-16S", employeeID, employeeFN, employeeLN, projectName, sprintName);
             }
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
