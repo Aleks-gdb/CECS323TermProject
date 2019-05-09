@@ -289,34 +289,18 @@ public class Software {
             	System.out.println("Project does not exist. Please enter a valid project.");
             	user_projectName = scan.nextLine();
         	}
-        	System.out.println("Please assign an ID for this user story.");
+					System.out.println("Please enter the sprint start date");
+					listSprintDates();
+					String user_sStartDate = scan.nextLine();
+					System.out.println("Please enter the user story ID");
+					listNullStories(user_projectName);
         	int user_usID = scan.nextInt();
-        	listSprintDates();
-        	System.out.println("Please enter the start date for the sprint backlog in YYYY-MM-DD format.");
-        	scan.nextLine();
-        	String user_sStartDate = scan.nextLine();
-        	System.out.println("Please enter the role of the user story");
-        	String user_role = scan.nextLine();
-        	System.out.println("Please enter the goal of the user story");
-        	String user_goal = scan.nextLine();
-        	System.out.println("Please enter the benefit of the user story");
-        	String user_benefit = scan.nextLine();
-        	System.out.println("Please enter the priority number of the user story");
-        	int user_priority = scan.nextInt();
 
-        	String sql = "INSERT into UserStories(projectName, sStartDate, usID, role, goal, benefit, priority) "
-                	+ "VALUES(?, ?, ?, ?, ?, ?, ?)";
+					String sql = "UPDATE UserStories SET sStartDate = '" + user_sStartDate + "' WHERE projectName = '" + user_projectName + "' AND usID = " + user_usID;
 
         	try {
-            	PreparedStatement stmnt = conn.prepareStatement(sql);
-            	stmnt.setString(1, user_projectName);
-            	stmnt.setString(2, user_sStartDate);
-            	stmnt.setInt(3, user_usID);
-            	stmnt.setString(4, user_role);
-            	stmnt.setString(5, user_goal);
-            	stmnt.setString(6, user_benefit);
-            	stmnt.setInt(7, user_priority);
-            	stmnt.executeUpdate();
+							stmnt = conn.createStatement();
+            	stmnt.executeUpdate(sql);
         	} catch (SQLException e) {
             	System.out.println("SQLException: " + e.getMessage());
             	System.out.println("SQLState: " + e.getSQLState());
